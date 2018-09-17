@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app" class="main">
+    <h2>Todo list</h2>
+    <div class="list">
+        <h3>Add task</h3>
+        <input type="text" class="text-keyword" placeholder="Input task then press Enter" @keyup.13='addList' v-model="addText"/>
+        <p>Total: {{prolist.length}}, {{noend==0?"Finished all":'Done:'+(prolist.length-noend)+', Doing: '+noend+''}}</p>
+        <p>
+            <input type="radio" name="chooseType" checked="true" @click='chooseList(1)'/><label>All tasks</label>
+            <input type="radio" name="chooseType" @click='chooseList(2)'/><label>Done tasks</label>
+            <input type="radio" name="chooseType" @click='chooseList(3)'/><label>Doing tasks</label>
+        </p>
+    </div>
+    <ul>
+        <li class="li1" v-for="(list,index) in newList" :class="{'eidting':curIndex===index}">
+            <div>
+                <span class="status-span" @click="changeType(index)" :class="{'status-end':list.status}"></span>
+                <span @dblclick="curIndex=index">{{list.name}}</span>
+                <span class="close" @click='delectList(list)'>X</span>
+            </div>
+            <input type="text" class="text2" v-model='list.name' @keyup.esc='cancelEdit(list)' @blur='edited' @focus='editBefore(list.name)' @keyup.enter='edited' v-focus/>
+        </li>
+    </ul>
+</div>
+</body>
+<script src="../../src/assets/js/vue.min.js"></script>
+<script src="app.js"></script>
+</html>

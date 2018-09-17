@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sudoku Game</title>
+    <link rel="stylesheet" href="../../src/assets/style/reset.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="num-box" v-show="numShow" id="num">
+    <div class="num-tips">
+        <p>Sudoku Rules:</p>
+        <p>1. No duplicate numbers in each row</p>
+        <p>2. No duplicate numbers in each column</p>
+    </div>
+    <div class="num-table" @mouseleave="hoverCol=''" :class="{'shake':isShake}">
+        <!--遍历每一行-->
+        <div v-for="row,index in allNum" class="num-row clear">
+            <!--遍历行里面的每一列-->
+            <!--
+                no:被掏空数组的样式
+                cur:格子被点击时触发，被点击的格子样式
+                cur-col:鼠标进入的时候触发，和被点击格子同一列的格子的样式
+                err：填写错误的时候触发的样式
+            -->
+            <div v-for="num1,indexSub in row"
+                 :class="{'no':num1==='',
+                 'cur':curRow===index&&indexSub===curCol,
+                 'cur-col':hoverCol===indexSub,
+                 'err':(optionNow.x===index&&optionNow.y===indexSub)||(optionNowInRow.x===index&&optionNowInRow.y===indexSub)||(optionNowInCol.x===index&&optionNowInCol.y===indexSub)}"
+                 @click="showCheck(index,indexSub)" @mouseenter="hoverCol=indexSub;" class="num-col">
+                {{allNumText[index][indexSub]}}
+
+            </div>
+        </div>
+        <!--数字键盘-->
+        <div class="num-check clear" :style="{'top':(curRow+1)*60+'px','left':(curCol+1)*60+'px'}"
+             v-show="checkShow">
+            <ul>
+                <li @click="inputText(1)">1</li>
+                <li @click="inputText(2)">2</li>
+                <li @click="inputText(3)">3</li>
+                <li @click="inputText(4)">4</li>
+                <li @click="inputText(5)">5</li>
+                <li @click="inputText(6)">6</li>
+                <li @click="inputText(7)">7</li>
+                <li @click="inputText(8)">8</li>
+                <li @click="inputText(9)">9</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+<script src="../../src/assets/js/vue.min.js"></script>
+<script src="app.js"></script>
+</html>

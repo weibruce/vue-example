@@ -1,0 +1,115 @@
+var app = new Vue({
+    el:'#app',
+    data:{
+        puke:[],
+        //第一次翻牌的号码
+        firstNumber:0,
+        pukeNowIndex:-1,
+        pukeErrorIndex:-1,
+        //已经翻牌的号码
+        checkEnd:[],
+        //旋转角度
+        pukeRotate:0,
+        isStart:true,
+        nowTime:15,
+        endTime:90,
+        pukeTimer:null,
+        endTimer:null
+    },
+    methods:{
+        /**
+         * @description 初始化翻牌
+         */
+        initPuke(){
+            this.pukeShow=!this.pukeShow;
+            if(this.pukeShow){
+                this.isStart=true;
+                this.nowTime=15;
+                this.endTime=90;
+                this.checkEnd=[];
+                this.puke=[];
+                this.firstNumber=0;
+                this.pukeNowIndex=-1;
+                this.pukeErrorIndex=-1;
+                //准备翻牌数组
+                let pukeList=[1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8],pukeText='';
+                for(let i=0;i<16;i++){
+                    pukeText=pukeList.splice(Math.floor(Math.random() * pukeList.length),1)[0];
+                    this.puke.push({
+                        number:pukeText
+                    })
+                }
+                //开始数据
+                this.pukeTimer=setInterval(()=>{
+                        this.nowTime--;
+                if(this.nowTime<0){
+                    clearInterval(this.pukeTimer);
+                    this.isStart=false;
+                    this.pukeIng();
+                }
+            },1000)
+            }
+            else{
+                clearInterval(this.pukeTimer);
+                clearInterval(this.endTimer);
+            }
+        },
+        /**
+         * @description 翻牌倒计时
+         */
+        pukeIng(){
+            this.endTimer=setInterval(()=>{
+                this.endTime--;
+                if(this.endTime<0){
+                    clearInterval(this.endTimer);
+                    clearInterval(this.pukeTimer);
+                }
+            },1000);
+        },
+        /**
+         * @description 翻牌操作
+         * @param val 当前记录
+         * @param i 当前记录索引
+         */
+        pukeDo(val,i){
+            //号码是否已经有翻过的记录或者不在有效时间内翻牌
+            if(this.isStart||this.endTime<0||this.pukeNowIndex===i||this.checkEnd.indexOf(val.number)!==-1){
+                return;
+            }
+            //是否是第一次翻牌
+            if(this.firstNumber===0){
+                //记录第一次的翻牌信息
+                this.firstNumber=val.number;
+                this.pukeNowIndex=i;
+            }
+            else{
+                //与第一次是否一致
+                if(this.firstNumber===val.number){
+                    this.checkEnd.push(val.number)
+                    this.pukeErrorIndex=-1;
+                    this.pukeNowIndex=-1;
+                    //如果长度等于8就是全部已经翻完，游戏成功
+                    if(this.checkEnd.length===8){
+                        alert('游戏成功！');
+                        clearInterval(this.endTimer);
+                        clearInterval(this.pukeTimer);
+                    }
+                }
+                else{
+                    //翻牌错误，重置
+                    this.pukeErrorIndex=i;
+                    setTimeout(()=>{
+                        this.pukeErrorIndex=-1;
+                    this.pukeNowIndex=-1;
+                    //进行旋转
+                    this.pukeRotate+=90;
+                },400);
+                }
+                this.firstNumber=0;
+            }
+        }
+    },
+    mounted:function () {
+        this.initPuke();
+    }
+});

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Borad Game</title>
+    <link rel="stylesheet" href="../../src/assets/style/reset.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+    <p class="puke-tips">Remember the images on borad then find the same images in 90 seconds<span v-show="nowTime>0" class="ml30"> Time: {{nowTime}}</span><span v-show="endTime>0&&nowTime<=0" class="ml30">Time: {{endTime}}</span><span v-show="endTime<=0" class="ml30">Failed</span></p>
+    <div class="puke clearfix" :style="{'transform':'rotate( '+pukeRotate+'deg)'}">
+        <ul>
+            <li v-for="item,index in puke" @click="pukeDo(item,index)" :class="[isStart||pukeNowIndex===index||pukeErrorIndex===index||checkEnd.indexOf(item.number)!==-1?'pukeNum':'pukeBg']"  :style="{'transform':'rotate( -'+pukeRotate+'deg)'}">
+                <div class="zero"></div>
+                <!--<div class="num" :class="{'po'+item.number}"></div>-->
+                <div class="num" :class="'po'+item.number"></div>
+            </li>
+        </ul>
+    </div>
+</div>
+</body>
+<script src="../../src/assets/js/vue.min.js"></script>
+<script src="app.js"></script>
+</html>
